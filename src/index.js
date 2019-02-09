@@ -44,10 +44,11 @@ class HourlyRate extends React.Component {
 	}
 
 	componentDidMount(){
-		const ifHourly = reactLocalStorage.getObject('hourlyRate');
-		if(ifHourly){
+		if(Object.keys(reactLocalStorage.getObject(this.props.cn)).length === 0){
+			reactLocalStorage.setObject(this.props.cn,this.state.inputValueArray)
+		}else{
 			this.setState({
-				inputValueArray: ifHourly
+				inputValueArray: reactLocalStorage.getObject(this.props.cn)
 			})
 		}
 	}
@@ -64,7 +65,7 @@ class HourlyRate extends React.Component {
 		tempHourlyRateArray[typeOfInput] = currencyToFloat(value);
 
 		this.setState({ inputValueArray: newInputValueArray, hourlyRateArray: tempHourlyRateArray },function(){
-			reactLocalStorage.setObject('hourlyRate', this.state.inputValueArray);
+			reactLocalStorage.setObject(this.props.cn, this.state.inputValueArray);
 		});
 	}
 
@@ -231,14 +232,14 @@ class PageManager extends React.Component {
 			return (<SystemPairings updateParentState={this.updateSystemPairingsCB} />)
 
 		if (this.state.whatRendersNext === "isHourlyRateNext")
-			return (<HourlyRate updateParentState={this.updateStateCB} />)
+			return (<HourlyRate updateParentState={this.updateStateCB} cn={"HourlyRate"} />)
 
 		if (this.state.whatRendersNext === "isInteroperabilityNext")
-			return (<YesNoQuestion updateParentState={this.updateStateCB} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="isHourlyRateNext" feeArray={this.state.feeArray} whatRendersNextOnYes="isVettingProcessNext" whatRendersNextOnNo="isHandleIntegrationsNext"
+			return (<YesNoQuestion updateParentState={this.updateStateCB} cn={"isInteroperability"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="isHourlyRateNext" feeArray={this.state.feeArray} whatRendersNextOnYes="isVettingProcessNext" whatRendersNextOnNo="isHandleIntegrationsNext"
 				questionText="Will/ Did you vet products for interoperability?" />)
 
 		if (this.state.whatRendersNext === "isVettingProcessNext")
-			return (<SelectableDaysAndHours updateParentState={this.updateStateCB} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="isInteroperabilityNext" hourlyRateArray={this.state.hourlyRateArray} feeArray={this.state.feeArray}
+			return (<SelectableDaysAndHours cn={"VettingProcess"} updateParentState={this.updateStateCB} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="isInteroperabilityNext" hourlyRateArray={this.state.hourlyRateArray} feeArray={this.state.feeArray}
 				whatRendersNext={"isHandleIntegrationsNext"} questionText="Who will be/ was involved in the technical vetting process?" />)
 
 		if (this.state.whatRendersNext === "isHandleIntegrationsNext")

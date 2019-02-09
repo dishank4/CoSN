@@ -10,6 +10,7 @@
     "react-dom": "^16.7.0",
     "react-dropdown": "^1.6.3",
     "react-scripts": "2.1.1",
+    "reactjs-localstorage": "0.0.7",
     "reactstrap": "^7.0.2"
   },
   "scripts": {

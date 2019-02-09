@@ -107,21 +107,21 @@ class SelectableDaysAndHours extends React.Component {
 				<br />
 
 				{this.state.showInputArray["showITLeaderInput"] ?
-					<HoursDaysPeopleInput inputType="itLeader" dayUpdateCB={this.updateDayArray} hourUpdateCB={this.updateHourArray} />
+					<HoursDaysPeopleInput inputType="itLeader" dayUpdateCB={this.updateDayArray} hourUpdateCB={this.updateHourArray} cn={this.props.cn} />
 					: null}
 
 				{this.state.showInputArray["showITStaffInput"] ?
-					<HoursDaysPeopleInput inputType="itStaff" dayUpdateCB={this.updateDayArray} hourUpdateCB={this.updateHourArray} staffUpdateCB={this.updateStaffArray} />
+					<HoursDaysPeopleInput inputType="itStaff" dayUpdateCB={this.updateDayArray} hourUpdateCB={this.updateHourArray} staffUpdateCB={this.updateStaffArray} cn={this.props.cn} />
 
 					: null}
 
 				{this.state.showInputArray["showAdminInput"] ?
-					<HoursDaysPeopleInput inputType="admin" dayUpdateCB={this.updateDayArray} hourUpdateCB={this.updateHourArray} staffUpdateCB={this.updateStaffArray} />
+					<HoursDaysPeopleInput inputType="admin" dayUpdateCB={this.updateDayArray} hourUpdateCB={this.updateHourArray} staffUpdateCB={this.updateStaffArray} cn={this.props.cn} />
 					: null}
 
 				{this.state.showInputArray["showTeacherInput"] ?
 
-					<HoursDaysPeopleInput inputType="teacher" dayUpdateCB={this.updateDayArray} hourUpdateCB={this.updateHourArray} staffUpdateCB={this.updateStaffArray} />
+					<HoursDaysPeopleInput inputType="teacher" dayUpdateCB={this.updateDayArray} hourUpdateCB={this.updateHourArray} staffUpdateCB={this.updateStaffArray} cn={this.props.cn} />
 
 					: null}
 

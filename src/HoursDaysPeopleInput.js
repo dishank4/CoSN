@@ -3,6 +3,7 @@ import './index.css';
 import { InputGroup, InputGroupAddon, InputGroupText, Input  } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {addCommasToInput, removeCommasFromInput} from './HelperFunctions.js'
+import {reactLocalStorage} from 'reactjs-localstorage';
 
 class HoursDaysPeopleInput extends React.Component
 {
@@ -31,12 +32,28 @@ class HoursDaysPeopleInput extends React.Component
 
 	}
 
+	componentDidMount(){
+        if(Object.keys(reactLocalStorage.getObject(this.props.inputType)).length === 0){
+            reactLocalStorage.setObject(this.props.cn+"_"+this.props.inputType+"_Day",this.state.dayValueArray);
+			reactLocalStorage.setObject(this.props.cn+"_"+this.props.inputType+"_Hour",this.state.hourValueArray);
+			reactLocalStorage.setObject(this.props.cn+"_"+this.props.inputType+"_NumberOfStaffs",this.state.numberOfStaffValueArray);
+        }else{
+            this.setState({
+				dayValueArray: reactLocalStorage.getObject(this.props.cn+"_"+this.props.inputType+"_Day"),
+                hourValueArray: reactLocalStorage.getObject(this.props.cn+"_"+this.props.inputType+"_Hour"),
+				numberOfStaffValueArray: reactLocalStorage.getObject(this.props.cn+"_"+this.props.inputType+"_NumberOfStaffs"),
+            })
+        }
+    }
+
 
 	updateNumberOfStaffArray(inputType, input)
 	{
 		var tempStaffArray = this.state.numberOfStaffValueArray;
 		tempStaffArray[inputType] = addCommasToInput(input);
-		this.setState({numberOfStaffValueArray: tempStaffArray});
+		this.setState({numberOfStaffValueArray: tempStaffArray}, function(){
+			reactLocalStorage.setObject(this.props.cn+"_"+this.props.inputType+"_NumberOfStaffs", this.state.numberOfStaffValueArray);
+		});
 		this.props.staffUpdateCB(this.props.inputType, removeCommasFromInput(input));
 	}
 
@@ -45,7 +62,9 @@ class HoursDaysPeopleInput extends React.Component
 	{
 		var tempHourArray = this.state.hourValueArray;
 		tempHourArray[inputType] = addCommasToInput(input);
-		this.setState({hourValueArray: tempHourArray});
+		this.setState({hourValueArray: tempHourArray}, function(){
+			reactLocalStorage.setObject(this.props.cn+"_"+this.props.inputType+"_Hour", this.state.hourValueArray);
+		});
 		this.props.hourUpdateCB(this.props.inputType, removeCommasFromInput(input));
 	}
 
@@ -53,7 +72,9 @@ class HoursDaysPeopleInput extends React.Component
 	{
 		var tempDayArray = this.state.dayValueArray;
 		tempDayArray[inputType] = addCommasToInput(input);
-		this.setState({dayValueArray: tempDayArray});
+		this.setState({dayValueArray: tempDayArray},function(){
+			reactLocalStorage.setObject(this.props.cn+"_"+this.props.inputType+"_Day", this.state.dayValueArray);
+		});
 		this.props.dayUpdateCB(this.props.inputType, removeCommasFromInput(input));
 	}
 
