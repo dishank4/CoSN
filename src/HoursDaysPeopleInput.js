@@ -1,9 +1,6 @@
-
 import React from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import { Button, ButtonGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, InputGroupText, Input  } from 'reactstrap';
+import { InputGroup, InputGroupAddon, InputGroupText, Input  } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {addCommasToInput, removeCommasFromInput} from './HelperFunctions.js'
 
