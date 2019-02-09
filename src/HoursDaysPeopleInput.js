@@ -33,14 +33,24 @@ class HoursDaysPeopleInput extends React.Component
 	}
 
 	componentDidMount(){
-        if(Object.keys(reactLocalStorage.getObject(this.props.inputType)).length === 0){
+        if(Object.keys(reactLocalStorage.getObject(this.props.cn+"_"+this.props.inputType+"_Day")).length === 0){
             reactLocalStorage.setObject(this.props.cn+"_"+this.props.inputType+"_Day",this.state.dayValueArray);
-			reactLocalStorage.setObject(this.props.cn+"_"+this.props.inputType+"_Hour",this.state.hourValueArray);
-			reactLocalStorage.setObject(this.props.cn+"_"+this.props.inputType+"_NumberOfStaffs",this.state.numberOfStaffValueArray);
         }else{
             this.setState({
 				dayValueArray: reactLocalStorage.getObject(this.props.cn+"_"+this.props.inputType+"_Day"),
+            })
+        }
+        if(Object.keys(reactLocalStorage.getObject(this.props.cn+"_"+this.props.inputType+"_Hour")).length === 0){
+				reactLocalStorage.setObject(this.props.cn+"_"+this.props.inputType+"_Hour",this.state.hourValueArray);
+        }else{
+            this.setState({
                 hourValueArray: reactLocalStorage.getObject(this.props.cn+"_"+this.props.inputType+"_Hour"),
+            })
+        }
+        if(Object.keys(reactLocalStorage.getObject(this.props.cn+"_"+this.props.inputType+"_NumberOfStaffs")).length === 0){
+				reactLocalStorage.setObject(this.props.cn+"_"+this.props.inputType+"_NumberOfStaffs",this.state.numberOfStaffValueArray);
+        }else{
+            this.setState({
 				numberOfStaffValueArray: reactLocalStorage.getObject(this.props.cn+"_"+this.props.inputType+"_NumberOfStaffs"),
             })
         }

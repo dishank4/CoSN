@@ -16,7 +16,7 @@ class YesNoQuestion extends React.Component
 				<div>
 					<h1>{this.props.questionText}</h1>
 					<Button size="lg" className ="yes" color = "primary"  onClick={(e)=>this.props.updateParentState(this.props.feeArray, this.props.whatRendersNextOnYes)}>Yes</Button>
-					<Button size="lg" className = "no" color = "danger"  onClick={(e)=>this.props.updateParentState(this.props.feeArray, this.props.whatRendersNextOnNo)}>No</Button>
+					<Button size="lg" className = "no" color = "danger"  onClick={(e)=>this.props.updateParentState(this.props.feeArray, this.props.whatRendersNextOnNo ,null ,null,true,this.props.localState)}>No</Button>
 					<Button size="lg" className="back" outline color="primary" onClick={(e) => this.props.backComponent(this.props.isFirstIntegration,this.props.whatRendersBack)}>Back</Button>
 				</div>
 			);

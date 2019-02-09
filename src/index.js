@@ -202,7 +202,7 @@ class PageManager extends React.Component {
 	}
 
 
-	updateStateCB(feeArray, whatRendersNext, hourlyRateArray, showInputArray) {
+	updateStateCB(feeArray, whatRendersNext, hourlyRateArray, showInputArray , isPressNo ,componentName ) {
 		this.setState({ whatRendersNext: whatRendersNext });
 
 		if (feeArray != null)
@@ -211,7 +211,13 @@ class PageManager extends React.Component {
 		if (hourlyRateArray != null)
 			//eslint-disable-next-line
 			this.state.hourlyRateArray = hourlyRateArray;
-
+		console.log(isPressNo);
+		console.log(componentName);	
+		if(isPressNo){
+			for(var compNam of componentName){
+				reactLocalStorage.setObject(compNam,{})
+			}
+		}	
 		// console.log("index updateStateCB feeArray: ", this.state.feeArray);
 		console.log("index updateStateCB hourlyRateArray: ", this.state.hourlyRateArray);
 	}
@@ -235,7 +241,7 @@ class PageManager extends React.Component {
 			return (<HourlyRate updateParentState={this.updateStateCB} cn={"HourlyRate"} />)
 
 		if (this.state.whatRendersNext === "isInteroperabilityNext")
-			return (<YesNoQuestion updateParentState={this.updateStateCB} cn={"isInteroperability"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="isHourlyRateNext" feeArray={this.state.feeArray} whatRendersNextOnYes="isVettingProcessNext" whatRendersNextOnNo="isHandleIntegrationsNext"
+			return (<YesNoQuestion updateParentState={this.updateStateCB} cn={"isInteroperability"} localState = {['VettingProcess_admin_Day','VettingProcess_admin_Hour',"VettingProcess_admin_NumberOfStaffs","VettingProcess_itLeader_Day","VettingProcess_itLeader_Hour","VettingProcess_itLeader_NumberOfStaffs","VettingProcess_teacher_Day","VettingProcess_teacher_Hour","VettingProcess_teacher_NumberOfStaffs"] } backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="isHourlyRateNext" feeArray={this.state.feeArray} whatRendersNextOnYes="isVettingProcessNext" whatRendersNextOnNo="isHandleIntegrationsNext"
 				questionText="Will/ Did you vet products for interoperability?" />)
 
 		if (this.state.whatRendersNext === "isVettingProcessNext")
@@ -246,14 +252,14 @@ class PageManager extends React.Component {
 			return (<HandleIntegrations updateParentState={this.updateStateCB} />)
 
 		if (this.state.whatRendersNext === "isVendorIntegrationNext")
-			return (<Integration hourlyRateArray={this.state.hourlyRateArray} updateParentState={this.updateStateCB} feeArray={this.state.feeArray} integrationType={"Vendor"} systemPairing={this.state.systemPairing} />)
+			return (<Integration hourlyRateArray={this.state.hourlyRateArray} cn={"VendorIntegration"} updateParentState={this.updateStateCB} feeArray={this.state.feeArray} integrationType={"Vendor"} systemPairing={this.state.systemPairing} />)
 
 
 		if (this.state.whatRendersNext === "isConsultantIntegrationNext")
-			return <Integration hourlyRateArray={this.state.hourlyRateArray} updateParentState={this.updateStateCB} feeArray={this.state.feeArray} integrationType={"Consultant"} systemPairing={this.state.systemPairing} />
+			return <Integration cn={"ConsultantIntegration"} hourlyRateArray={this.state.hourlyRateArray} updateParentState={this.updateStateCB} feeArray={this.state.feeArray} integrationType={"Consultant"} systemPairing={this.state.systemPairing} />
 
 		if (this.state.whatRendersNext === "isCustomIntegrationNext")
-			return <Integration hourlyRateArray={this.state.hourlyRateArray} updateParentState={this.updateStateCB} feeArray={this.state.feeArray} integrationType={"Custom"} systemPairing={this.state.systemPairing} />
+			return <Integration cn={"CustomIntegration"} hourlyRateArray={this.state.hourlyRateArray} updateParentState={this.updateStateCB} feeArray={this.state.feeArray} integrationType={"Custom"} systemPairing={this.state.systemPairing} />
 
 
 		return <p>Couldn't find the next page to render</p>

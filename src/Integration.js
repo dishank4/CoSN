@@ -7,6 +7,7 @@ import HoursDaysPeopleInput from './HoursDaysPeopleInput.js'
 import SelectableDaysAndHours from './SelectableDaysAndHours.js'
 import SummaryPage from './SummaryPage.js'
 import YesNoQuestion from './YesNoQuestion.js'
+import { reactLocalStorage } from 'reactjs-localstorage';
 
 
 class RelatedUserTraining extends React.Component {
@@ -245,17 +246,17 @@ class Supporting extends React.Component {
 				<h1>{(this.props.integrationType === "Vendor" || this.props.integrationType === "Custom") ? "Will you/have you spent time supporting vendor?" : "Will you/have you spent time supporting the consultant?"}
 					(this includes meetings/phone calls and any data mapping/cleaning/validating)</h1>
 				<Button size="lg" className="yes" color="primary" onClick={(e) => this.setState({ showSupportingVendorInputs: true })}>Yes</Button>
-				<Button size="lg" className="no" color="danger" onClick={(e) => this.props.updateParentState(this.props.feeArray, this.props.whatRendersNext)}>No</Button>
+				<Button size="lg" className="no" color="danger" onClick={(e) => this.props.updateParentState(this.props.feeArray, this.props.whatRendersNext , null, null,true,this.props.localState)}>No</Button>
 				<Button size="lg" className="back" outline color="primary" onClick={(e) => this.props.backComponent(this.props.isFirstIntegration, this.props.whatRendersBack)}>Back</Button>
 				<br />
 				<br />
 				{this.state.showSupportingVendorInputs ?
 					<div>
 						{this.state.showITStaffInput ?
-							<HoursDaysPeopleInput inputType="itStaff" dayUpdateCB={this.updateDayArray} hourUpdateCB={this.updateHourArray} staffUpdateCB={this.updateStaffArray} />
+							<HoursDaysPeopleInput cn={this.props.cn + "_supporting_vendor"} inputType="itStaff" dayUpdateCB={this.updateDayArray} hourUpdateCB={this.updateHourArray} staffUpdateCB={this.updateStaffArray} />
 							: null}
 
-						<HoursDaysPeopleInput inputType="itLeader" dayUpdateCB={this.updateDayArray} hourUpdateCB={this.updateHourArray} />
+						<HoursDaysPeopleInput cn={this.props.cn + "_supporting_vendor"} inputType="itLeader" dayUpdateCB={this.updateDayArray} hourUpdateCB={this.updateHourArray} />
 						<div style={{ float: "right" }}>
 							<Button size="lg" className="next" outline color="primary" onClick={(e) => this.calculateFees()}>Next</Button>
 						</div>
@@ -286,7 +287,7 @@ class Integration extends React.Component {
 	}
 
 
-	flatRateCallback(flatRateAmount, isOneTimeFee, whatRendersNext) {
+	flatRateCallback(flatRateAmount, isOneTimeFee, whatRendersNext , isPressNo , componentName) {
 		if (isOneTimeFee) {
 			console.log(this.state.feeArray["oneTimeFee"]);
 			//eslint-disable-next-line 
@@ -296,6 +297,13 @@ class Integration extends React.Component {
 			//eslint-disable-next-line
 			this.state.feeArray["reOccurringFees"] += flatRateAmount;
 		}
+
+		if(isPressNo){
+			for(var compNam of componentName){
+				reactLocalStorage.setObject(compNam,{})
+			}
+		}	
+
 		this.setState({ whatRendersNext: whatRendersNext });
 
 		console.log("Integration flat rate callback: ", this.state.feeArray);
@@ -311,13 +319,20 @@ class Integration extends React.Component {
 		}
 	}
 
-	updateStateCB(feeArray, whatRendersNext, hourlyRateArray, showInputArray) {
+	updateStateCB(feeArray, whatRendersNext, hourlyRateArray, showInputArray ,isPressNo , componentName ) {
 		this.setState({ feeArray: feeArray, whatRendersNext: whatRendersNext });
 
 
 		//InputArray maybe undefined 
 		if (showInputArray != null)
 			this.setState({ showInputArray: showInputArray })
+		
+		if(isPressNo){
+			for(var compNam of componentName){
+				reactLocalStorage.setObject(compNam,{})
+			}
+		}	
+
 		//console.log("Integration Update State CB: ", this.state.feeArray);
 		//console.log("Integration UpdateStateCB showInputArray: ", this.state.showInputArray);
 		//console.log("Integration UpdateStateCB: ", whatRendersNext);
@@ -327,60 +342,60 @@ class Integration extends React.Component {
 
 	render() {
 		if (this.state.whatRendersNext === "firstFlatRate")
-			return <FlatRate isOneTimeFee={true} questionText="Do you have a flat rate amount?" backComponent={this.backComponent} updateParentState={this.flatRateCallback}
+			return <FlatRate isOneTimeFee={true} cn={this.props.cn + "_firstFlatRate"} questionText="Do you have a flat rate amount?" localState={[this.props.cn+"_firstFlatRate"]} backComponent={this.backComponent} updateParentState={this.flatRateCallback}
 				feeArray={this.state.feeArray} isFirstIntegration={true} whatRendersNext="supporting" whatRendersBack="isHandleIntegrationsNext" />
 
 		if (this.state.whatRendersNext === "supporting")
-			return <Supporting feeArray={this.state.feeArray} hourlyRateArray={this.state.hourlyRateArray} backComponent={this.backComponent}
-				updateParentState={this.updateStateCB} isFirstIntegration={this.props.integrationType === "Custom" ? true : false} whatRendersBack={this.props.integrationType === "Custom" ? "isHandleIntegrationsNext" : "firstFlatRate"} whatRendersNext={this.props.integrationType === "Custom" ? "adhocConsultingFees" : "signOnOneTimeFee"} integrationType={this.props.integrationType} />
+			return <Supporting cn={this.props.cn }  feeArray={this.state.feeArray} hourlyRateArray={this.state.hourlyRateArray} backComponent={this.backComponent}
+				updateParentState={this.updateStateCB} localState={["VendorIntegration_supporting_vendor_itStaff_Day","VendorIntegration_supporting_vendor_itStaff_Hour","VendorIntegration_supporting_vendor_itStaff_NumberOfStaffs","VendorIntegration_supporting_vendor_itLeader_Day","VendorIntegration_supporting_vendor_itLeader_Hour","VendorIntegration_supporting_vendor_itLeader_NumberOfStaffs"]} isFirstIntegration={this.props.integrationType === "Custom" ? true : false} whatRendersBack={this.props.integrationType === "Custom" ? "isHandleIntegrationsNext" : "firstFlatRate"} whatRendersNext={this.props.integrationType === "Custom" ? "adhocConsultingFees" : "signOnOneTimeFee"} integrationType={this.props.integrationType} />
 
 		//This only happens in Custom Integration type
 		if (this.state.whatRendersNext === "adhocConsultingFees")
-			return <FlatRate isOneTimeFee={true} backComponent={this.backComponent} questionText="Are there ad-hoc consulting fees for supporting in-house work?" updateParentState=
+			return <FlatRate isOneTimeFee={true} cn={this.props.cn + "_adhocConsultingFees"} backComponent={this.backComponent} questionText="Are there ad-hoc consulting fees for supporting in-house work?" updateParentState=
 				{this.flatRateCallback} isFirstIntegration={false} whatRendersBack="supporting" whatRendersNext="signOnOneTimeFee" feeArray={this.state.feeArray} key={this.state.whatRendersNext} /> //TODO Ask if one time fee
 
 		if (this.state.whatRendersNext === "signOnOneTimeFee")
-			return <FlatRate isOneTimeFee={true} backComponent={this.backComponent} questionText="Is there a one-time fee for setting-up sign on?" updateParentState=
+			return <FlatRate isOneTimeFee={true} cn={this.props.cn + "_signOnOneTimeFee"} backComponent={this.backComponent} questionText="Is there a one-time fee for setting-up sign on?" updateParentState=
 				{this.flatRateCallback} isFirstIntegration={false} whatRendersBack="supporting" whatRendersNext="signOnReoccuringFee" feeArray={this.state.feeArray} key={this.state.whatRendersNext} /> //Different message on vendor
 
 		if (this.state.whatRendersNext === "signOnReoccuringFee")
-			return <FlatRate isOneTimeFee={false} backComponent={this.backComponent} questionText="Are there re-occurring fees for maintaining sign-on?" updateParentState=
+			return <FlatRate isOneTimeFee={false} cn={this.props.cn + "_signOnReoccuringFee"} backComponent={this.backComponent} questionText="Are there re-occurring fees for maintaining sign-on?" updateParentState=
 				{this.flatRateCallback} isFirstIntegration={false} whatRendersBack="signOnOneTimeFee" whatRendersNext="vendorFeeOneTimeFee" feeArray={this.state.feeArray} key={this.state.whatRendersNext} /> //Different Message Vendor
 
 		if (this.state.whatRendersNext === "vendorFeeOneTimeFee")
-			return <FlatRate isOneTimeFee={true} backComponent={this.backComponent} questionText={(this.props.integrationType === "Vendor" || this.props.integrationType === "Custom") ? "Are there one-time vendor fees to set-up rostering?" : "Is there a one-time fee to set-up rostering?"}
+			return <FlatRate isOneTimeFee={true} cn={this.props.cn + "_vendorFeeOneTimeFee"} backComponent={this.backComponent} questionText={(this.props.integrationType === "Vendor" || this.props.integrationType === "Custom") ? "Are there one-time vendor fees to set-up rostering?" : "Is there a one-time fee to set-up rostering?"}
 				updateParentState={this.flatRateCallback} isFirstIntegration={false} whatRendersBack="signOnReoccuringFee" whatRendersNext="venderFeeReoccuringFees" feeArray={this.state.feeArray} key={this.state.whatRendersNext} /> //Different Message for Con
 
 		if (this.state.whatRendersNext === "venderFeeReoccuringFees")
-			return <FlatRate isOneTimeFee={false} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="vendorFeeOneTimeFee" questionText={(this.props.integrationType === "Vendor" || this.props.integrationType === "Custom") ? "Are there re-occuring vendor maintenance fees for rostering?" : "Are there re-occurring maintenance fees for rostering?"} updateParentState=
+			return <FlatRate isOneTimeFee={false} cn={this.props.cn + "_venderFeeReoccuringFees"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="vendorFeeOneTimeFee" questionText={(this.props.integrationType === "Vendor" || this.props.integrationType === "Custom") ? "Are there re-occuring vendor maintenance fees for rostering?" : "Are there re-occurring maintenance fees for rostering?"} updateParentState=
 				{this.flatRateCallback} whatRendersNext={this.props.integrationType === "Custom" ? "manualDataEntry" : "setupSecurityForFileTransferFees"} feeArray={this.state.feeArray} key={this.state.whatRendersNext} /> //Different Message for con
 
 		if (this.state.whatRendersNext === "setupSecurityForFileTransferFees") //TODO On Custom this will render manualMappingCleaningData
-			return <FileTransferFees feeArray={this.state.feeArray} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack={this.props.integrationType === "Custom" ? "oneSystemToAnother" : "venderFeeReoccuringFees" } updateParentState={this.updateStateCB} whatRendersNext={this.props.integrationType === "Custom" ? "manualMappingCleaningData"
+			return <FileTransferFees cn={this.props.cn + "_setupSecurityForFileTransferFees"} feeArray={this.state.feeArray} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack={this.props.integrationType === "Custom" ? "oneSystemToAnother" : "venderFeeReoccuringFees" } updateParentState={this.updateStateCB} whatRendersNext={this.props.integrationType === "Custom" ? "manualMappingCleaningData"
 				: "vendorProvideUserTraining"} hourlyRateArray={this.state.hourlyRateArray} />
 
 		if (this.state.whatRendersNext === "vendorProvideUserTraining")
-			return <YesNoQuestion backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="setupSecurityForFileTransferFees" whatRendersNextOnYes="vendorChangeSeparateFeeForTraining" whatRendersNextOnNo="relatedUserTraining" updateParentState={this.updateStateCB}
+			return <YesNoQuestion cn={this.props.cn + "_vendorProvideUserTraining"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="setupSecurityForFileTransferFees" whatRendersNextOnYes="vendorChangeSeparateFeeForTraining" whatRendersNextOnNo="relatedUserTraining" updateParentState={this.updateStateCB}
 				feeArray={this.state.feeArray} questionText="Does vendor provide user training / related professional development?" />
 
 		if (this.state.whatRendersNext === "vendorChangeSeparateFeeForTraining")
-			return <FlatRate isOneTimeFee={true} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="vendorProvideUserTraining" questionText="Does vendor charge a separate fee for training?" updateParentState=
+			return <FlatRate cn={this.props.cn + "_vendorChangeSeparateFeeForTraining"} isOneTimeFee={true} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="vendorProvideUserTraining" questionText="Does vendor charge a separate fee for training?" updateParentState=
 				{this.flatRateCallback} whatRendersNext="receivesTraining" feeArray={this.state.feeArray} key={this.state.whatRendersNext} /> //TODO Ask if this is one time fee or not
 
 		if (this.state.whatRendersNext === "receivesTraining")
-			return <SelectableDaysAndHours updateParentState={this.updateStateCB} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="vendorChangeSeparateFeeForTraining" hourlyRateArray={this.state.hourlyRateArray} feeArray={this.state.feeArray}
+			return <SelectableDaysAndHours cn={this.props.cn + "_receivesTraining"} updateParentState={this.updateStateCB} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="vendorChangeSeparateFeeForTraining" hourlyRateArray={this.state.hourlyRateArray} feeArray={this.state.feeArray}
 				whatRendersNext="relatedUserTraining" questionText="Who receives the training?" />
 
 		if (this.state.whatRendersNext === "relatedUserTraining")
-			return <RelatedUserTraining backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="vendorProvideUserTraining" updateParentState={this.updateStateCB} hourlyRateArray={this.state.hourlyRateArray}
+			return <RelatedUserTraining cn={this.props.cn + "_relatedUserTraining"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="vendorProvideUserTraining" updateParentState={this.updateStateCB} hourlyRateArray={this.state.hourlyRateArray}
 				feeArray={this.state.feeArray} whatRendersNext="additionalOneTimeFees" showInputArray={this.state.showInputArray} />
 
 		if (this.state.whatRendersNext === "additionalOneTimeFees")
-			return <FlatRate backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="relatedUserTraining" isOneTimeFee={true} questionText="Are there any additional one-time fees to add?" updateParentState=
+			return <FlatRate cn={this.props.cn + "_additionalOneTimeFees"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="relatedUserTraining" isOneTimeFee={true} questionText="Are there any additional one-time fees to add?" updateParentState=
 				{this.flatRateCallback} whatRendersNext="additionalInHouseCosts" feeArray={this.state.feeArray} key={this.state.whatRendersNext} /> //TODO Ask if this is one time fee or not
 
 		if (this.state.whatRendersNext === "additionalInHouseCosts")
-			return <FlatRate backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="additionalOneTimeFees" isOneTimeFee={true} questionText="Are there any additional in-house non-IT costs to add?" updateParentState=
+			return <FlatRate cn={this.props.cn + "_additionalInHouseCosts"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="additionalOneTimeFees" isOneTimeFee={true} questionText="Are there any additional in-house non-IT costs to add?" updateParentState=
 				{this.flatRateCallback} whatRendersNext="summaryPage" feeArray={this.state.feeArray} key={this.state.whatRendersNext} /> //TODO Ask if this is one time fee or not
 
 
@@ -391,23 +406,23 @@ class Integration extends React.Component {
 
 
 		if (this.state.whatRendersNext === "manualDataEntry")
-			return <YesNoQuestion backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="venderFeeReoccuringFees" whatRendersNextOnYes="whoEntersData" whatRendersNextOnNo="oneSystemToAnother"
+			return <YesNoQuestion cn={this.props.cn + "manualDataEntry"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="venderFeeReoccuringFees" whatRendersNextOnYes="whoEntersData" whatRendersNextOnNo="oneSystemToAnother"
 				updateParentState={this.updateStateCB} feeArray={this.state.feeArray} questionText="Is manual data entry or manual upload of .csv files required to get data into a system?" />
 
 		if (this.state.whatRendersNext === "whoEntersData")
-			return <SelectableDaysAndHours backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="manualDataEntry" updateParentState={this.updateStateCB} hourlyRateArray={this.state.hourlyRateArray} feeArray={this.state.feeArray}
+			return <SelectableDaysAndHours cn={this.props.cn + "whoEntersData"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="manualDataEntry" updateParentState={this.updateStateCB} hourlyRateArray={this.state.hourlyRateArray} feeArray={this.state.feeArray}
 				whatRendersNext="oneSystemToAnother" questionText="Who enters the  data?" />
 
 		if (this.state.whatRendersNext === "oneSystemToAnother")
-			return <YesNoQuestion backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="manualDataEntry" whatRendersNextOnYes="managesFiles" whatRendersNextOnNo="setupSecurityForFileTransferFees" updateParentState={this.updateStateCB}
+			return <YesNoQuestion cn={this.props.cn + "oneSystemToAnother"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="manualDataEntry" whatRendersNextOnYes="managesFiles" whatRendersNextOnNo="setupSecurityForFileTransferFees" updateParentState={this.updateStateCB}
 				feeArray={this.state.feeArray} questionText="Is manual data entry or manual upload/download of .csv files required to get data from one system into another?" />
 
 		if (this.state.whatRendersNext === "managesFiles")
-			return <SelectableDaysAndHours backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="oneSystemToAnother" updateParentState={this.updateStateCB} hourlyRateArray={this.state.hourlyRateArray} feeArray={this.state.feeArray}
+			return <SelectableDaysAndHours cn={this.props.cn + "managesFiles"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="oneSystemToAnother" updateParentState={this.updateStateCB} hourlyRateArray={this.state.hourlyRateArray} feeArray={this.state.feeArray}
 				whatRendersNext="setupSecurityForFileTransferFees" questionText="Who enters the data or manages the files?" />
 
 		if (this.state.whatRendersNext === "manualMappingCleaningData")
-			return <SelectableDaysAndHours updateParentState={this.updateStateCB} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="setupSecurityForFileTransferFees" hourlyRateArray={this.state.hourlyRateArray} feeArray={this.state.feeArray}
+			return <SelectableDaysAndHours cn={this.props.cn + "manualMappingCleaningData"} updateParentState={this.updateStateCB} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="setupSecurityForFileTransferFees" hourlyRateArray={this.state.hourlyRateArray} feeArray={this.state.feeArray}
 				whatRendersNext="vendorProvideUserTraining" questionText="Who is involved with manual mapping/cleaning/validating data?" />
 
 		if (this.state.whatRendersNext === "summaryPage")

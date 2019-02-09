@@ -3,6 +3,7 @@ import './index.css';
 import { Button, InputGroup, Input } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { inputToCurrency, currencyToFloat } from './HelperFunctions.js'
+import { reactLocalStorage } from 'reactjs-localstorage';
 
 
 
@@ -24,8 +25,21 @@ class FlatRate extends React.Component {
 		this.onFocus = this.onFocus.bind(this);
 	}
 
+	componentDidMount(){
+		console.log(this.props.cn)
+		if(Object.keys(reactLocalStorage.getObject(this.props.cn)).length === 0){
+			reactLocalStorage.setObject(this.props.cn,{ "flatRateAmount" : this.state.flatRateAmount, 'latRateAmountDisplayValue': this.state.latRateAmountDisplayValue})
+		}else{
+			var fra = reactLocalStorage.getObject(this.props.cn)
+			this.state.flatRateAmount = fra['flatRateAmount']
+			this.state.flatRateAmountDisplayValue = fra['latRateAmountDisplayValue']
+		}
+	}
+
 	onChangeInput(value) {
-		this.setState({ flatRateAmount: currencyToFloat(value), flatRateAmountDisplayValue: inputToCurrency(value) });
+		this.setState({ flatRateAmount: currencyToFloat(value), flatRateAmountDisplayValue: inputToCurrency(value) },function(){
+			reactLocalStorage.setObject(this.props.cn , { 'flatRateAmount' : currencyToFloat(value) , 'latRateAmountDisplayValue': inputToCurrency(value)})
+		});
 	}
 
 	onFocus() {
@@ -43,7 +57,7 @@ class FlatRate extends React.Component {
 				<div>
 					<h1>{this.props.questionText}</h1>
 					<Button size="lg" className="yes" color="primary" onClick={(e) => this.setState({ showFlatRateInput: true })}>Yes</Button>
-					<Button size="lg" className="no" color="danger" onClick={(e) => this.props.updateParentState(0.0, this.props.isOneTimeFee, this.props.whatRendersNext)}>No</Button>
+					<Button size="lg" className="no" color="danger" onClick={(e) => this.props.updateParentState(0.0, this.props.isOneTimeFee, this.props.whatRendersNext ,true,this.props.localState)}>No</Button>
 					<Button size="lg" className="back" outline color="primary" onClick={(e) => this.props.backComponent(this.props.isFirstIntegration,this.props.whatRendersBack)}>Back</Button>
 				</div>
 				<br />
