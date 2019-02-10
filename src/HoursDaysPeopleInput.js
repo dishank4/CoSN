@@ -141,7 +141,7 @@ class HoursDaysPeopleInput extends React.Component
 						</InputGroupAddon>
 						<Input value = {this.state.hourValueArray["itLeader"]} type = "text" onFocus = {(evt)=>{this.onFocusHours("itLeader")}}
 							onChange = {(evt)=>{this.updateHourArray(this.props.inputType, evt.target.value)}} />
-						}
+						
 					</InputGroup>
 					<br/>
 					<InputGroup>

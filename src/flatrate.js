@@ -58,7 +58,9 @@ class FlatRate extends React.Component {
 					<h1>{this.props.questionText}</h1>
 					<Button size="lg" className="yes" color="primary" onClick={(e) => this.setState({ showFlatRateInput: true })}>Yes</Button>
 					<Button size="lg" className="no" color="danger" onClick={(e) => this.props.updateParentState(0.0, this.props.isOneTimeFee, this.props.whatRendersNext ,true,this.props.localState)}>No</Button>
-					<Button size="lg" className="back" outline color="primary" onClick={(e) => this.props.backComponent(this.props.isFirstIntegration,this.props.whatRendersBack)}>Back</Button>
+					 { !this.props.notDisplayBack &&
+						<Button size="lg" className="back" outline color="primary" onClick={(e) => this.props.backComponent(this.props.isFirstIntegration,this.props.whatRendersBack)}>Back</Button>
+					 }
 				</div>
 				<br />
 				{

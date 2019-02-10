@@ -247,7 +247,9 @@ class Supporting extends React.Component {
 					(this includes meetings/phone calls and any data mapping/cleaning/validating)</h1>
 				<Button size="lg" className="yes" color="primary" onClick={(e) => this.setState({ showSupportingVendorInputs: true })}>Yes</Button>
 				<Button size="lg" className="no" color="danger" onClick={(e) => this.props.updateParentState(this.props.feeArray, this.props.whatRendersNext , null, null,true,this.props.localState)}>No</Button>
-				<Button size="lg" className="back" outline color="primary" onClick={(e) => this.props.backComponent(this.props.isFirstIntegration, this.props.whatRendersBack)}>Back</Button>
+				{ !this.props.notDisplayBack &&
+					<Button size="lg" className="back" outline color="primary" onClick={(e) => this.props.backComponent(this.props.isFirstIntegration, this.props.whatRendersBack)}>Back</Button>
+				}
 				<br />
 				<br />
 				{this.state.showSupportingVendorInputs ?
@@ -342,11 +344,11 @@ class Integration extends React.Component {
 
 	render() {
 		if (this.state.whatRendersNext === "firstFlatRate")
-			return <FlatRate isOneTimeFee={true} cn={this.props.cn + "_firstFlatRate"} questionText="Do you have a flat rate amount?" localState={[this.props.cn+"_firstFlatRate"]} backComponent={this.backComponent} updateParentState={this.flatRateCallback}
+			return <FlatRate isOneTimeFee={true} cn={this.props.cn + "_firstFlatRate"} questionText="Do you have a flat rate amount?" localState={[this.props.cn+"_firstFlatRate"]} backComponent={this.backComponent} updateParentState={this.flatRateCallback} notDisplayBack={true}
 				feeArray={this.state.feeArray} isFirstIntegration={true} whatRendersNext="supporting" whatRendersBack="isHandleIntegrationsNext" />
 
 		if (this.state.whatRendersNext === "supporting")
-			return <Supporting cn={this.props.cn }  feeArray={this.state.feeArray} hourlyRateArray={this.state.hourlyRateArray} backComponent={this.backComponent}
+			return <Supporting cn={this.props.cn }  feeArray={this.state.feeArray} hourlyRateArray={this.state.hourlyRateArray} backComponent={this.backComponent} notDisplayBack={true}
 				updateParentState={this.updateStateCB} localState={["VendorIntegration_supporting_vendor_itStaff_Day","VendorIntegration_supporting_vendor_itStaff_Hour","VendorIntegration_supporting_vendor_itStaff_NumberOfStaffs","VendorIntegration_supporting_vendor_itLeader_Day","VendorIntegration_supporting_vendor_itLeader_Hour","VendorIntegration_supporting_vendor_itLeader_NumberOfStaffs"]} isFirstIntegration={this.props.integrationType === "Custom" ? true : false} whatRendersBack={this.props.integrationType === "Custom" ? "isHandleIntegrationsNext" : "firstFlatRate"} whatRendersNext={this.props.integrationType === "Custom" ? "adhocConsultingFees" : "signOnOneTimeFee"} integrationType={this.props.integrationType} />
 
 		//This only happens in Custom Integration type
