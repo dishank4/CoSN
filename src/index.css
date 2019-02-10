@@ -49,3 +49,8 @@ code {
   color: black!important;
   transition: background-color 2s, color 2s;
 }
+
+.back{
+  margin-right: 10px;
+  margin-left: 10px;
+}

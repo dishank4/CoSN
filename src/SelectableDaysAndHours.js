@@ -126,8 +126,8 @@ class SelectableDaysAndHours extends React.Component {
 					: null}
 
 				<div style={{ float: "right" }}>
-					<Button className="next" size="lg" outline color="primary" onClick={(e) => this.calculateFees()}>Next</Button>
 					<Button size="lg" className="back" outline color="primary" onClick={(e) => this.props.backComponent(this.props.isFirstIntegration,this.props.whatRendersBack)}>Back</Button>
+					<Button className="next" size="lg" outline color="primary" onClick={(e) => this.calculateFees()}>Next</Button>
 				</div>
 
 			</div>
