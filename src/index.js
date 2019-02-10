@@ -215,7 +215,9 @@ class PageManager extends React.Component {
 		console.log(componentName);	
 		if(isPressNo){
 			for(var compNam of componentName){
-				reactLocalStorage.setObject(compNam,{})
+				if(Object.keys(reactLocalStorage.getObject(compNam)).length > 0){
+					reactLocalStorage.setObject(compNam,{})
+				}
 			}
 		}	
 		// console.log("index updateStateCB feeArray: ", this.state.feeArray);
