@@ -9,6 +9,7 @@ import Integration from './Integration.js'
 import SelectableDaysAndHours from './SelectableDaysAndHours.js'
 import YesNoQuestion from './YesNoQuestion.js'
 import { inputToCurrency, currencyToFloat } from './HelperFunctions.js'
+// import SummaryPage from './SummaryPage';
 
 class HandleIntegrations extends React.Component {
 
@@ -178,6 +179,10 @@ class SystemPairings extends React.Component {
 					<Button size="lg" className="next" outline color="primary" onClick={(e) => this.props.updateParentState(this.state.dropDownValue, "isHourlyRateNext")}
 						disabled={this.state.isNextDisabled}>Next</Button>
 				</div>
+				{/* <div>
+					<Button size="lg" className="next" outline color="primary" onClick={(e) => this.props.updateParentState(this.state.dropDownValue, "summaryPage")}
+						>summary</Button>
+				</div> */}
 			</div>
 		)
 
@@ -238,6 +243,8 @@ class PageManager extends React.Component {
 
 		if (this.state.whatRendersNext === "isSystemPairingNext")
 			return (<SystemPairings updateParentState={this.updateSystemPairingsCB} />)
+		// if (this.state.whatRendersNext === "summaryPage")
+		// 	return <SummaryPage feeArray={this.state.feeArray} systemPairing={this.props.systemPairing} />
 
 		if (this.state.whatRendersNext === "isHourlyRateNext")
 			return (<HourlyRate updateParentState={this.updateStateCB} cn={"HourlyRate"} />)
