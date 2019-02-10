@@ -351,7 +351,7 @@ class Integration extends React.Component {
 
 		//This only happens in Custom Integration type
 		if (this.state.whatRendersNext === "adhocConsultingFees")
-			return <FlatRate isOneTimeFee={true} cn={this.props.cn + "_adhocConsultingFees"} backComponent={this.backComponent} questionText="Are there ad-hoc consulting fees for supporting in-house work?" updateParentState=
+			return <FlatRate isOneTimeFee={true} cn={this.props.cn + "_adhocConsultingFees"} localState={["CustomIntegration_adhocConsultingFees"]} backComponent={this.backComponent} questionText="Are there ad-hoc consulting fees for supporting in-house work?" updateParentState=
 				{this.flatRateCallback} isFirstIntegration={false} whatRendersBack="supporting" whatRendersNext="signOnOneTimeFee" feeArray={this.state.feeArray} key={this.state.whatRendersNext} /> //TODO Ask if one time fee
 
 		if (this.state.whatRendersNext === "signOnOneTimeFee")
@@ -406,7 +406,7 @@ class Integration extends React.Component {
 
 
 		if (this.state.whatRendersNext === "manualDataEntry")
-			return <YesNoQuestion cn={this.props.cn + "manualDataEntry"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="venderFeeReoccuringFees" whatRendersNextOnYes="whoEntersData" whatRendersNextOnNo="oneSystemToAnother"
+			return <YesNoQuestion cn={this.props.cn + "manualDataEntry"} localState={["CustomIntegrationwhoEntersData_itLeader_Day","CustomIntegrationwhoEntersData_itLeader_Hour","CustomIntegrationwhoEntersData_itLeader_NumberOfStaffs","CustomIntegrationwhoEntersData_admin_Day","CustomIntegrationwhoEntersData_admin_Hour","CustomIntegrationwhoEntersData_admin_NumberOfStaffs","CustomIntegrationwhoEntersData_teacher_Day","CustomIntegrationwhoEntersData_teacher_Hour","CustomIntegrationwhoEntersData_teacher_NumberOfStaffs"]} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="venderFeeReoccuringFees" whatRendersNextOnYes="whoEntersData" whatRendersNextOnNo="oneSystemToAnother"
 				updateParentState={this.updateStateCB} feeArray={this.state.feeArray} questionText="Is manual data entry or manual upload of .csv files required to get data into a system?" />
 
 		if (this.state.whatRendersNext === "whoEntersData")
@@ -414,7 +414,7 @@ class Integration extends React.Component {
 				whatRendersNext="oneSystemToAnother" questionText="Who enters the  data?" />
 
 		if (this.state.whatRendersNext === "oneSystemToAnother")
-			return <YesNoQuestion cn={this.props.cn + "oneSystemToAnother"} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="manualDataEntry" whatRendersNextOnYes="managesFiles" whatRendersNextOnNo="setupSecurityForFileTransferFees" updateParentState={this.updateStateCB}
+			return <YesNoQuestion cn={this.props.cn + "oneSystemToAnother"} localState={["CustomIntegrationmanagesFiles_itLeader_Day","CustomIntegrationmanagesFiles_itLeader_Hour","CustomIntegrationmanagesFiles_itLeader_NumberOfStaffs","CustomIntegrationmanagesFiles_admin_Day","CustomIntegrationmanagesFiles_admin_Hour","CustomIntegrationmanagesFiles_admin_NumberOfStaffs","CustomIntegrationmanagesFiles_teacher_Day","CustomIntegrationmanagesFiles_teacher_Hour","CustomIntegrationmanagesFiles_teacher_NumberOfStaffs"]} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="manualDataEntry" whatRendersNextOnYes="managesFiles" whatRendersNextOnNo="setupSecurityForFileTransferFees" updateParentState={this.updateStateCB}
 				feeArray={this.state.feeArray} questionText="Is manual data entry or manual upload/download of .csv files required to get data from one system into another?" />
 
 		if (this.state.whatRendersNext === "managesFiles")
