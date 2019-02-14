@@ -205,7 +205,7 @@ class HoursDaysPeopleInput extends React.Component
 						<InputGroupText>No of Admins</InputGroupText>
 						</InputGroupAddon>
 						<Input value ={this.state.numberOfStaffValueArray["admin"]}  type = "text" onFocus = {(evt)=>{this.onFocusNumberOfStaff("admin")}}
-						onChange = {(evt)=>{this.props.staffUpdateCB(this.props.inputType, parseFloat(evt.target.value))}} />
+						onChange = {(evt)=>{this.updateNumberOfStaffArray(this.props.inputType, evt.target.value)}} />
 					</InputGroup>
 					<br/>
 					<InputGroup>
@@ -241,7 +241,7 @@ class HoursDaysPeopleInput extends React.Component
 						<InputGroupText>No of Teachers</InputGroupText>
 						</InputGroupAddon>
 						<Input value = {this.state.numberOfStaffValueArray["teacher"]}  type = "text" onFocus = {(evt)=>{this.onFocusNumberOfStaff("teacher")}}
-							onChange = {(evt)=>{this.props.staffUpdateCB(this.props.inputType, parseFloat(evt.target.value))}} />
+							onChange = {(evt)=>{this.updateNumberOfStaffArray(this.props.inputType, evt.target.value)}} />
 					</InputGroup>
 					<br/>
 					<InputGroup>
