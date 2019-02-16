@@ -59,7 +59,7 @@ class HoursDaysPeopleInput extends React.Component {
 		var number = input.replace(/,/g, '').replace('$', '');
 		var tempStaffArray = this.state.numberOfStaffValueArray;
 
-		if (isNaN(number)) {
+		if (isNaN(number) || number.includes(".")) {
 			return false;
 		} else {
 			if (number < 0) {
@@ -98,7 +98,7 @@ class HoursDaysPeopleInput extends React.Component {
 		var number = input.replace(/,/g, '').replace('$', '');
 		var tempDayArray = this.state.dayValueArray;
 
-		if (isNaN(number)) {
+		if (isNaN(number) || number.includes(".")) {
 			return false;
 		} else {
 			if (number < 0) {
