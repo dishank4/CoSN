@@ -166,7 +166,7 @@ class HoursDaysPeopleInput extends React.Component {
 					<InputGroupAddon addonType="prepend">
 						<InputGroupText>Days</InputGroupText>
 					</InputGroupAddon>
-					<Input value={this.state.dayValueArray["itLeader"]} type="text" onFocus={(evt) => { this.onFocusDays("itLeader") }}
+					<Input value={(this.state.dayValueArray["itLeader"]).trim()} type="text" onFocus={(evt) => { this.onFocusDays("itLeader") }}
 						onChange={(evt) => { this.updateDayArray(this.props.inputType, evt.target.value) }} />
 				</InputGroup>
 				<br />
@@ -184,7 +184,7 @@ class HoursDaysPeopleInput extends React.Component {
 					<InputGroupAddon addonType="prepend">
 						<InputGroupText>No of IT Staff</InputGroupText>
 					</InputGroupAddon>
-					<Input value={this.state.numberOfStaffValueArray["itStaff"]} type="text" onFocus={(evt) => { this.onFocusNumberOfStaff("itStaff") }}
+					<Input value={(this.state.numberOfStaffValueArray["itStaff"]).trim()} type="text" onFocus={(evt) => { this.onFocusNumberOfStaff("itStaff") }}
 						onChange={(evt) => { this.updateNumberOfStaffArray(this.props.inputType, evt.target.value) }} />
 				</InputGroup>
 				<br />
@@ -220,7 +220,7 @@ class HoursDaysPeopleInput extends React.Component {
 					<InputGroupAddon addonType="prepend">
 						<InputGroupText>No of Admins</InputGroupText>
 					</InputGroupAddon>
-					<Input value={this.state.numberOfStaffValueArray["admin"]} type="text" onFocus={(evt) => { this.onFocusNumberOfStaff("admin") }}
+					<Input value={this.state.numberOfStaffValueArray["admin"].trim()} type="text" onFocus={(evt) => { this.onFocusNumberOfStaff("admin") }}
 						onChange={(evt) => { this.updateNumberOfStaffArray(this.props.inputType, evt.target.value) }} />
 				</InputGroup>
 				<br />
@@ -255,7 +255,7 @@ class HoursDaysPeopleInput extends React.Component {
 					<InputGroupAddon addonType="prepend">
 						<InputGroupText>No of Teachers</InputGroupText>
 					</InputGroupAddon>
-					<Input value={this.state.numberOfStaffValueArray["teacher"]} type="text" onFocus={(evt) => { this.onFocusNumberOfStaff("teacher") }}
+					<Input value={this.state.numberOfStaffValueArray["teacher"].trim()} type="text" onFocus={(evt) => { this.onFocusNumberOfStaff("teacher") }}
 						onChange={(evt) => { this.updateNumberOfStaffArray(this.props.inputType, evt.target.value) }} />
 				</InputGroup>
 				<br />
