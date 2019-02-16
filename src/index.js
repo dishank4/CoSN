@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {reactLocalStorage} from 'reactjs-localstorage';
+import { reactLocalStorage } from 'reactjs-localstorage';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, Input } from 'reactstrap';
@@ -44,10 +44,10 @@ class HourlyRate extends React.Component {
 		this.onChangeForInput = this.onChangeForInput.bind(this);
 	}
 
-	componentDidMount(){
-		if(Object.keys(reactLocalStorage.getObject(this.props.cn)).length === 0){
-			reactLocalStorage.setObject(this.props.cn,this.state.inputValueArray)
-		}else{
+	componentDidMount() {
+		if (Object.keys(reactLocalStorage.getObject(this.props.cn)).length === 0) {
+			reactLocalStorage.setObject(this.props.cn, this.state.inputValueArray)
+		} else {
 			this.setState({
 				inputValueArray: reactLocalStorage.getObject(this.props.cn)
 			})
@@ -56,18 +56,26 @@ class HourlyRate extends React.Component {
 
 
 	onChangeForInput(value, typeOfInput) {
+		var number = value.replace(/,/g, '').replace('$', '');
+		if (!(/^\d*\.?\d*$/.test(number))) {
+			return false;
+		} else {
+			if (number < 0) {
+				return false;
+			} else {
+				var parsedValue = inputToCurrency(value);
 
-		var parsedValue = inputToCurrency(value);
+				var newInputValueArray = this.state.inputValueArray;
+				newInputValueArray[typeOfInput] = parsedValue;
 
-		var newInputValueArray = this.state.inputValueArray;
-		newInputValueArray[typeOfInput] = parsedValue;
+				var tempHourlyRateArray = this.state.hourlyRateArray;
+				tempHourlyRateArray[typeOfInput] = currencyToFloat(value);
 
-		var tempHourlyRateArray = this.state.hourlyRateArray;
-		tempHourlyRateArray[typeOfInput] = currencyToFloat(value);
-
-		this.setState({ inputValueArray: newInputValueArray, hourlyRateArray: tempHourlyRateArray },function(){
-			reactLocalStorage.setObject(this.props.cn, this.state.inputValueArray);
-		});
+				this.setState({ inputValueArray: newInputValueArray, hourlyRateArray: tempHourlyRateArray }, function () {
+					reactLocalStorage.setObject(this.props.cn, this.state.inputValueArray);
+				});
+			}
+		}
 	}
 
 	onFocus(inputType) {
@@ -207,7 +215,7 @@ class PageManager extends React.Component {
 	}
 
 
-	updateStateCB(feeArray, whatRendersNext, hourlyRateArray, showInputArray , isPressNo ,componentName ) {
+	updateStateCB(feeArray, whatRendersNext, hourlyRateArray, showInputArray, isPressNo, componentName) {
 		this.setState({ whatRendersNext: whatRendersNext });
 
 		if (feeArray != null)
@@ -217,14 +225,14 @@ class PageManager extends React.Component {
 			//eslint-disable-next-line
 			this.state.hourlyRateArray = hourlyRateArray;
 		console.log(isPressNo);
-		console.log(componentName);	
-		if(isPressNo){
-			for(var compNam of componentName){
-				if(Object.keys(reactLocalStorage.getObject(compNam)).length > 0){
-					reactLocalStorage.setObject(compNam,{})
+		console.log(componentName);
+		if (isPressNo) {
+			for (var compNam of componentName) {
+				if (Object.keys(reactLocalStorage.getObject(compNam)).length > 0) {
+					reactLocalStorage.setObject(compNam, {})
 				}
 			}
-		}	
+		}
 		// console.log("index updateStateCB feeArray: ", this.state.feeArray);
 		console.log("index updateStateCB hourlyRateArray: ", this.state.hourlyRateArray);
 	}
@@ -250,7 +258,7 @@ class PageManager extends React.Component {
 			return (<HourlyRate updateParentState={this.updateStateCB} cn={"HourlyRate"} />)
 
 		if (this.state.whatRendersNext === "isInteroperabilityNext")
-			return (<YesNoQuestion updateParentState={this.updateStateCB} cn={"isInteroperability"} localState = {['VettingProcess_admin_Day','VettingProcess_admin_Hour',"VettingProcess_admin_NumberOfStaffs","VettingProcess_itLeader_Day","VettingProcess_itLeader_Hour","VettingProcess_itLeader_NumberOfStaffs","VettingProcess_teacher_Day","VettingProcess_teacher_Hour","VettingProcess_teacher_NumberOfStaffs"] } backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="isHourlyRateNext" feeArray={this.state.feeArray} whatRendersNextOnYes="isVettingProcessNext" whatRendersNextOnNo="isHandleIntegrationsNext"
+			return (<YesNoQuestion updateParentState={this.updateStateCB} cn={"isInteroperability"} localState={['VettingProcess_admin_Day', 'VettingProcess_admin_Hour', "VettingProcess_admin_NumberOfStaffs", "VettingProcess_itLeader_Day", "VettingProcess_itLeader_Hour", "VettingProcess_itLeader_NumberOfStaffs", "VettingProcess_teacher_Day", "VettingProcess_teacher_Hour", "VettingProcess_teacher_NumberOfStaffs"]} backComponent={this.backComponent} isFirstIntegration={false} whatRendersBack="isHourlyRateNext" feeArray={this.state.feeArray} whatRendersNextOnYes="isVettingProcessNext" whatRendersNextOnNo="isHandleIntegrationsNext"
 				questionText="Will/ Did you vet products for interoperability?" />)
 
 		if (this.state.whatRendersNext === "isVettingProcessNext")

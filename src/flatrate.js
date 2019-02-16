@@ -37,9 +37,18 @@ class FlatRate extends React.Component {
 	}
 
 	onChangeInput(value) {
-		this.setState({ flatRateAmount: currencyToFloat(value), flatRateAmountDisplayValue: inputToCurrency(value) },function(){
-			reactLocalStorage.setObject(this.props.cn , { 'flatRateAmount' : currencyToFloat(value) , 'latRateAmountDisplayValue': inputToCurrency(value)})
-		});
+		var number = value.replace(/,/g, '').replace('$', '');
+		if (!(/^\d*\.?\d*$/.test(number))) {
+			return false;
+		} else {
+			if (number < 0) {
+				return false;
+			} else {
+				this.setState({ flatRateAmount: currencyToFloat(value), flatRateAmountDisplayValue: inputToCurrency(value) },function(){
+					reactLocalStorage.setObject(this.props.cn , { 'flatRateAmount' : currencyToFloat(value) , 'latRateAmountDisplayValue': inputToCurrency(value)})
+				});
+			}
+		}
 	}
 
 	onFocus() {
